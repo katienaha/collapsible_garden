@@ -1,6 +1,6 @@
 
-# Lightbulb that provides main source of light for plants
-class GrowLight:
+# LED status light that alerts user when water or food needs to be added
+class LedLight:
 
     def __init__(self, pin):
         self.pin = pin

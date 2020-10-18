@@ -1,6 +1,7 @@
 
 # Air pump that provides oxygen to plants in the water
-class air_pump:
+# TODO: Allow user to turn this off sometimes if it's being too noisy?
+class AirPump:
 
     def __init__(self, pin):
         self.pin = pin

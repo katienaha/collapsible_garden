@@ -4,7 +4,7 @@ import digitalio
 import adafruit_character_lcd.character_lcd as character_lcd
 
 # LCD that displays initial questions, keypad entries, and status
-class lcd_display:
+class LcdDisplay:
 
     def __init__(self, pins, columns=16, rows=2):
         self.pins = pins
