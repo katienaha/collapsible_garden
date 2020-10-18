@@ -1,5 +1,14 @@
 """Main module."""
 
+from collapsible_garden import config
+from collapsible_garden.grow_light import GrowLight
+from collapsible_garden.air_pump import AirPump
+from collapsible_garden.keypad import Keypad
+from collapsible_garden.lcd_display import LcdDisplay
+from collapsible_garden.led_light import LedLight
+from collapsible_garden.power_relay import PowerRelay
+from collapsible_garden.water_level_sensor import WaterLevelSensor
+
 # External module imports
 import RPi.GPIO as GPIO
 import time
@@ -9,14 +18,26 @@ from datetime import time
 class Garden:
 
     def __init__(self):
+        # Retrieve Raspberry Pi pins for each component
         self.lcd_pins = config['lcd_pins']
         self.led_pins = config['led_pins']
         self.keypad_pins = config['keypad_pins']
         self.relay_pins = config['relay_pins']
+        self.water_sensor_pin = config['water_sensor_pin']
+
         self.question_mode = False
 
         # Set up GPIO mode and pins to IN or OUT
         self.setup_pins()
+
+        self.grow_light = GrowLight(self.relay_pins['grow_light'])
+        self.air_pump = AirPump(self.relay_pins['air_pump'])
+        self.keypad = Keypad(self.keypad_pins)
+        self.lcd_display = LcdDisplay(self.lcd_pins, columns=16, rows=2)
+        self.led_light_water = LedLight(self.led_pins['water'])
+        self.led_light_food = LedLight(self.led_pins['food'])
+        self.power_relay = PowerRelay(self.relay_pins)
+        self.water_level_sensor = WaterLevelSensor(self.water_sensor_pin)
 
         # Ask for user input upon startup
         self.ask_input()
@@ -58,10 +79,10 @@ class Garden:
 
 if __name__ == "__main__":
 
-
-
+    garden = Garden()
     while True:
         pass
+        # TODO:
         # Display current time, next on/off, feeding
         # Check if current time > next light switch
         # Check if current time > next feeding
