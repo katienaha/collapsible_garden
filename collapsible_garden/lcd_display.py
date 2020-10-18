@@ -13,6 +13,8 @@ class LcdDisplay:
         self.lcd = character_lcd.Character_LCD_Mono(pins['rs'], pins['en'], pins['lcd_d4'], pins['lcd_d5'],
                                                     pins['lcd_d6'], pins['lcd_d7'], columns, rows,
                                                     pins['lcd_backlight'])
+        self.last_message = ''
 
     def display_text(self, message):
         self.lcd.message = message
+        self.last_message = self.lcd.message

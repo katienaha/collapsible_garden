@@ -4,6 +4,7 @@
 import RPi.GPIO as GPIO
 import time
 from collapsible_garden import config
+from datetime import time
 
 class Garden:
 
@@ -12,6 +13,7 @@ class Garden:
         self.led_pins = config['led_pins']
         self.keypad_pins = config['keypad_pins']
         self.relay_pins = config['relay_pins']
+        self.question_mode = False
 
         # Set up GPIO mode and pins to IN or OUT
         self.setup_pins()
@@ -37,6 +39,7 @@ class Garden:
     # Ask user for input regarding timing
     def ask_input(self):
 
+        self.question_mode = True
         # Display "Hello Kelsey!" or "Hello Ashley!"
         # TODO
 
@@ -48,6 +51,9 @@ class Garden:
                      'Light starttime?',
                      'AM(*) or PM(#)?'
                      'Light duration?']
+
+        for q in questions:
+            self.lcd_
 
 
 if __name__ == "__main__":
