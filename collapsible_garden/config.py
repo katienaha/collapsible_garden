@@ -4,13 +4,13 @@ from datetime import datetime
 config = dict()
 
 # Default time to turn light on in the morning
-config['light_start_time'] = datetime(2020, 1, 1, 7, 0, 0)
+config['light_start_time'] = datetime(2021, 1, 1, 7, 0, 0)
 
 # Default number of hours to leave the light on
 config['light_duration_hrs'] = 16
 
 # Default current date
-config['current_date'] = datetime(2020, 1, 1)
+config['current_date'] = datetime(2021, 1, 1)
 
 # TODO: The following pin numbers are placeholders
 # Pin Definitons:

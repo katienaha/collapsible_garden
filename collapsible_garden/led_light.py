@@ -1,4 +1,7 @@
 
+# External module imports
+import RPi.GPIO as GPIO
+
 # LED status light that alerts user when water or food needs to be added
 class LedLight:
 
@@ -6,11 +9,9 @@ class LedLight:
         self.pin = pin
 
     def turn_on(self):
-        # TODO
-        pass
+        GPIO.output(self.pin, GPIO.HIGH)
 
     def turn_off(self):
-        # TODO
-        pass
+        GPIO.output(self.pin, GPIO.LOW)
 
 

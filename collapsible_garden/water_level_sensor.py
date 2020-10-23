@@ -8,13 +8,16 @@ class WaterLevelSensor:
     # Store which pin receives info from the water level sensor
     def __init__(self, pin):
         self.pin = pin
+        self.is_too_low = False
 
     # Check to see if the water level is too low
     def check_water_level(self):
-        water_too_low = False
+
         if GPIO.input(self.pin) == GPIO.HIGH:
-            water_too_low = True
-        return water_too_low
+            self.is_too_low = True
+        else:
+            self.is_too_low = False
+        return self.is_too_low
 
 
 
