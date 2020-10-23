@@ -23,4 +23,5 @@ config['lcd_pins'] = {'rs': 11,
                       'backlight': 17}
 config['led_pins'] = [25, 26]
 config['keypad_pins'] = [18, 19, 20, 21, 22]
-config['relay_pins'] = [23, 24]
+config['relay_pins'] = [23]
+config['water_sensor_pins'] = [25]

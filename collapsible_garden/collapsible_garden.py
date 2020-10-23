@@ -2,7 +2,6 @@
 
 from collapsible_garden import config
 from collapsible_garden.grow_light import GrowLight
-from collapsible_garden.air_pump import AirPump
 from collapsible_garden.keypad import Keypad
 from collapsible_garden.lcd_display import LcdDisplay
 from collapsible_garden.led_light import LedLight
@@ -23,7 +22,7 @@ class Garden:
         self.led_pins = config['led_pins']
         self.keypad_pins = config['keypad_pins']
         self.relay_pins = config['relay_pins']
-        self.water_sensor_pin = config['water_sensor_pin']
+        self.water_sensor_pins = config['water_sensor_pins']
 
         self.question_mode = False
 
@@ -55,6 +54,8 @@ class Garden:
             GPIO.setup(keypad, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # keypad pins set as input
         for relay in self.relay_pins:
             GPIO.setup(relay, GPIO.OUT)  # relay pins set as output
+        for water_sensor in self.water_sensor_pins:
+            GPIO.setup(water_sensior, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         return
 
     # Ask user for input regarding timing
@@ -74,7 +75,16 @@ class Garden:
                      'Light duration?']
 
         for q in questions:
-            self.lcd_
+            self.lcd_display.display_text(q)
+            keys = []
+            input_str = ''
+            while '#' not in keys:
+                keys = self.keypad.receive_input()
+                for k in keys:
+                    input_str = input_str + str(k)
+                time.sleep(0.05)
+            input_str = input_str.strrep('#', '')
+
 
 
 if __name__ == "__main__":
