@@ -17,10 +17,10 @@ class Keypad:
                 (7, 8, 9),
                 ('*', 0, '#'))
 
-        keypad = adafruit_matrixkeypad.Matrix_Keypad(rows, cols, keys)
+        self.keypad = adafruit_matrixkeypad.Matrix_Keypad(rows, cols, keys)
 
     def receive_input(self):
-        keys = keypad.pressed_keys
+        keys = self.keypad.pressed_keys
         return keys
 
 

@@ -12,7 +12,7 @@ from collapsible_garden.water_level_sensor import WaterLevelSensor
 import RPi.GPIO as GPIO
 import time
 from collapsible_garden import config
-from datetime import datetime, time, timedelta
+from datetime import datetime, timedelta
 import re
 
 class Garden:
@@ -34,7 +34,7 @@ class Garden:
         self.led_light_water = LedLight(self.led_pins['water'])
         self.led_light_food = LedLight(self.led_pins['food'])
         self.power_relay = PowerRelay(self.relay_pins)
-        self.water_level_sensor = WaterLevelSensor(self.water_sensor_pin)
+        self.water_level_sensor = WaterLevelSensor(self.water_sensor_pins[0])
 
         self.current_month = 1
         self.day_of_month = 1
@@ -47,7 +47,7 @@ class Garden:
 
         self.startup_pi_time = datetime.now()
         # Ask for user input upon startup
-        self.ask_input()
+        self.request_input()
 
         # Change input times to 24 hour clock using AM and PM responses
         if self.am_or_pm_current == 2:
@@ -85,8 +85,8 @@ class Garden:
         # Pin Setup:
         GPIO.setmode(GPIO.BCM)
         for lcd in self.lcd_pins.values():
-            GPIO.setup(lcd, GPIO.OUT) # LCD pins set as output
-        for led in self.led_pins:
+            GPIO.setup(lcd.id, GPIO.OUT) # LCD pins set as output
+        for led in self.led_pins.values():
             GPIO.setup(led, GPIO.OUT) # LED pins set as output
         for keypad in self.keypad_pins:
             # TODO: pull-up or pull-down?
@@ -107,7 +107,7 @@ class Garden:
         input_valid = False
         input = None
         while not input_valid:
-            self.lcd_display.display_text(q)
+            self.lcd_display.display_text(question)
             keys = []
             input_str = ''
             while '#' not in keys:

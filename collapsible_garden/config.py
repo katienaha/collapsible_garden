@@ -1,5 +1,7 @@
 
 from datetime import datetime
+import digitalio
+import board
 
 config = dict()
 
@@ -14,14 +16,16 @@ config['current_date'] = datetime(2021, 1, 1)
 
 # TODO: The following pin numbers are placeholders
 # Pin Definitons:
-config['lcd_pins'] = {'rs': 2,
-                      'en': 3,
-                      'd4': 4,
-                      'd5': 17,
-                      'd6': 27,
-                      'd7': 22,
-                      'backlight': 10}
-config['led_pins'] = [9, 11]
+config['lcd_pins'] = {'rs': board.D2,
+                      'en': board.D3,
+                      'd4': board.D4,
+                      'd5': board.D17,
+                      'd6': board.D27,
+                      'd7': board.D22,
+                      'backlight' : board.D10}
+
+config['led_pins'] = {'water': 9,
+                      'food' : 11}
 config['keypad_pins'] = [5, 6, 13, 19, 26]
 config['relay_pins'] = [18]
 config['water_sensor_pins'] = [23]

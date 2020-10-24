@@ -10,10 +10,18 @@ class LcdDisplay:
         self.pins = pins
         self.columns = columns
         self.rows = rows
-        print(pins)
-        self.lcd = character_lcd.Character_LCD_Mono(pins['rs'], pins['en'], pins['d4'], pins['d5'],
-                                                    pins['d6'], pins['d7'], columns, rows,
-                                                    pins['backlight'])
+        
+        lcd_rs = digitalio.DigitalInOut(pins['rs'])
+        lcd_en = digitalio.DigitalInOut(pins['en'])
+        lcd_d7 = digitalio.DigitalInOut(pins['d7'])
+        lcd_d6 = digitalio.DigitalInOut(pins['d6'])
+        lcd_d5 = digitalio.DigitalInOut(pins['d5'])
+        lcd_d4 = digitalio.DigitalInOut(pins['d4'])
+        lcd_backlight = digitalio.DigitalInOut(pins['backlight'])
+
+
+        self.lcd = character_lcd.Character_LCD_Mono(lcd_rs, lcd_en, lcd_d4, lcd_d5,
+                                                    lcd_d6, lcd_d7, columns, rows)
         self.last_message = ''
 
     def display_text(self, message):
