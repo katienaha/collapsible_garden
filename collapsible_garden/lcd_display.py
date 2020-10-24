@@ -10,9 +10,10 @@ class LcdDisplay:
         self.pins = pins
         self.columns = columns
         self.rows = rows
-        self.lcd = character_lcd.Character_LCD_Mono(pins['rs'], pins['en'], pins['lcd_d4'], pins['lcd_d5'],
-                                                    pins['lcd_d6'], pins['lcd_d7'], columns, rows,
-                                                    pins['lcd_backlight'])
+        print(pins)
+        self.lcd = character_lcd.Character_LCD_Mono(pins['rs'], pins['en'], pins['d4'], pins['d5'],
+                                                    pins['d6'], pins['d7'], columns, rows,
+                                                    pins['backlight'])
         self.last_message = ''
 
     def display_text(self, message):

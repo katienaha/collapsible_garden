@@ -19,17 +19,16 @@ class Garden:
 
     def __init__(self):
         # Retrieve Raspberry Pi pins for each component
-        self.lcd_pins = config['lcd_pins']
-        self.led_pins = config['led_pins']
-        self.keypad_pins = config['keypad_pins']
-        self.relay_pins = config['relay_pins']
-        self.water_sensor_pins = config['water_sensor_pins']
+        self.lcd_pins = config.config['lcd_pins']
+        self.led_pins = config.config['led_pins']
+        self.keypad_pins = config.config['keypad_pins']
+        self.relay_pins = config.config['relay_pins']
+        self.water_sensor_pins = config.config['water_sensor_pins']
 
         # Set up GPIO mode and pins to IN or OUT
         self.setup_pins()
 
-        self.grow_light = GrowLight(self.relay_pins['grow_light'])
-        self.air_pump = AirPump(self.relay_pins['air_pump'])
+        self.grow_light = GrowLight(self.relay_pins[0])
         self.keypad = Keypad(self.keypad_pins)
         self.lcd_display = LcdDisplay(self.lcd_pins, columns=16, rows=2)
         self.led_light_water = LedLight(self.led_pins['water'])
@@ -84,8 +83,8 @@ class Garden:
     # Set up GPIO mode and pins to IN or OUT
     def setup_pins(self):
         # Pin Setup:
-        GPIO.setmode(GPIO.BOARD) # Broadcom pin-numbering scheme
-        for lcd in self.lcd_pins:
+        GPIO.setmode(GPIO.BCM)
+        for lcd in self.lcd_pins.values():
             GPIO.setup(lcd, GPIO.OUT) # LCD pins set as output
         for led in self.led_pins:
             GPIO.setup(led, GPIO.OUT) # LED pins set as output
@@ -95,7 +94,7 @@ class Garden:
         for relay in self.relay_pins:
             GPIO.setup(relay, GPIO.OUT)  # relay pins set as output
         for water_sensor in self.water_sensor_pins:
-            GPIO.setup(water_sensior, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+            GPIO.setup(water_sensor, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         return
 
     def get_current_clock_time(self):

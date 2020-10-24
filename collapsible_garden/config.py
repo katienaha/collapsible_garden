@@ -14,14 +14,14 @@ config['current_date'] = datetime(2021, 1, 1)
 
 # TODO: The following pin numbers are placeholders
 # Pin Definitons:
-config['lcd_pins'] = {'rs': 11,
-                      'en': 12,
-                      'd4': 13,
-                      'd5': 14,
-                      'd6': 15,
-                      'd7': 16,
-                      'backlight': 17}
-config['led_pins'] = [25, 26]
-config['keypad_pins'] = [18, 19, 20, 21, 22]
-config['relay_pins'] = [23]
-config['water_sensor_pins'] = [25]
+config['lcd_pins'] = {'rs': 2,
+                      'en': 3,
+                      'd4': 4,
+                      'd5': 17,
+                      'd6': 27,
+                      'd7': 22,
+                      'backlight': 10}
+config['led_pins'] = [9, 11]
+config['keypad_pins'] = [5, 6, 13, 19, 26]
+config['relay_pins'] = [18]
+config['water_sensor_pins'] = [23]
