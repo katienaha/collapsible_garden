@@ -2,6 +2,7 @@
 import board
 import digitalio
 import adafruit_character_lcd.character_lcd as character_lcd
+import time
 
 # LCD that displays initial questions, keypad entries, and status
 class LcdDisplay:
@@ -17,13 +18,21 @@ class LcdDisplay:
         lcd_d6 = digitalio.DigitalInOut(pins['d6'])
         lcd_d5 = digitalio.DigitalInOut(pins['d5'])
         lcd_d4 = digitalio.DigitalInOut(pins['d4'])
-        lcd_backlight = digitalio.DigitalInOut(pins['backlight'])
 
+        lcd = character_lcd.Character_LCD_Mono(lcd_rs, lcd_en, lcd_d4, lcd_d5, lcd_d6, lcd_d7, columns, rows)
+        lcd.message = "Hello Katie"
 
-        self.lcd = character_lcd.Character_LCD_Mono(lcd_rs, lcd_en, lcd_d4, lcd_d5,
-                                                    lcd_d6, lcd_d7, columns, rows)
-        self.last_message = ''
+        
+#        lcd = character_lcd.Character_LCD_Mono(lcd_rs, lcd_en, lcd_d4, lcd_d5,
+#                                                    lcd_d6, lcd_d7, columns, rows)
+#        lcd.message = "Hello Kelsey!"
+        last_message = ''
+        self.lcd = lcd
+        time.sleep(5)
 
     def display_text(self, message):
+        print('Displaying message: {}'.format(message))
+        self.lcd.clear()
+        time.sleep(0.1)
         self.lcd.message = message
-        self.last_message = self.lcd.message
+        self.last_message = self.lcd.message 

@@ -16,16 +16,18 @@ config['current_date'] = datetime(2021, 1, 1)
 
 # TODO: The following pin numbers are placeholders
 # Pin Definitons:
-config['lcd_pins'] = {'rs': board.D2,
-                      'en': board.D3,
-                      'd4': board.D4,
-                      'd5': board.D17,
-                      'd6': board.D27,
-                      'd7': board.D22,
-                      'backlight' : board.D10}
+config['lcd_pins'] = {'rs': board.D18,
+                      'en': board.D23,
+                      'd7': board.D24,
+                      'd6': board.D25,
+                      'd5': board.D8,
+                      'd4': board.D7}
 
-config['led_pins'] = {'water': 9,
-                      'food' : 11}
-config['keypad_pins'] = [5, 6, 13, 19, 26]
-config['relay_pins'] = [18]
-config['water_sensor_pins'] = [23]
+config['led_pins'] = {'water': 16,
+                      'food' : 20}
+
+config['keypad_cols'] = [digitalio.DigitalInOut(x) for x in (board.D26, board.D20, board.D21)]
+config['keypad_rows'] = [digitalio.DigitalInOut(x) for x in (board.D5, board.D6, board.D13, board.D19)]
+        
+config['relay_pins'] = [5]
+config['water_sensor_pins'] = [6]

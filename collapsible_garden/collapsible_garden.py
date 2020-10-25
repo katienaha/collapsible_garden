@@ -21,15 +21,16 @@ class Garden:
         # Retrieve Raspberry Pi pins for each component
         self.lcd_pins = config.config['lcd_pins']
         self.led_pins = config.config['led_pins']
-        self.keypad_pins = config.config['keypad_pins']
+        self.keypad_cols = config.config['keypad_cols']
+        self.keypad_rows = config.config['keypad_rows']
         self.relay_pins = config.config['relay_pins']
         self.water_sensor_pins = config.config['water_sensor_pins']
 
+        
         # Set up GPIO mode and pins to IN or OUT
         self.setup_pins()
-
         self.grow_light = GrowLight(self.relay_pins[0])
-        self.keypad = Keypad(self.keypad_pins)
+        self.keypad = Keypad(self.keypad_rows, self.keypad_cols)
         self.lcd_display = LcdDisplay(self.lcd_pins, columns=16, rows=2)
         self.led_light_water = LedLight(self.led_pins['water'])
         self.led_light_food = LedLight(self.led_pins['food'])
@@ -75,7 +76,7 @@ class Garden:
             s = self.grow_light.next_time_on
             self.grow_light.next_time_on = s.replace(day=s.day + 1)
 
-        self.grow_light.duration = timedelta(hours=light_duration)
+        self.grow_light.duration = timedelta(hours=self.light_duration)
         self.grow_light.next_time_off = self.grow_light.next_time_on + self.grow_light.duration
 
         self.next_feed = self.user_start_datetime + self.feed_duration # TODO: Ask user for last feed time?
@@ -88,9 +89,6 @@ class Garden:
             GPIO.setup(lcd.id, GPIO.OUT) # LCD pins set as output
         for led in self.led_pins.values():
             GPIO.setup(led, GPIO.OUT) # LED pins set as output
-        for keypad in self.keypad_pins:
-            # TODO: pull-up or pull-down?
-            GPIO.setup(keypad, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # keypad pins set as input
         for relay in self.relay_pins:
             GPIO.setup(relay, GPIO.OUT)  # relay pins set as output
         for water_sensor in self.water_sensor_pins:
@@ -108,19 +106,18 @@ class Garden:
         input = None
         while not input_valid:
             self.lcd_display.display_text(question)
-            keys = []
-            input_str = ''
-            while '#' not in keys:
-                keys = self.keypad.receive_input()
-                for k in keys:
-                    input_str = input_str + str(k)
-                time.sleep(0.05)
-            input_str = input_str.strrep('#', '')
-            input_str = input_str.strrep('*', '')
-            input = int(input_str)
+            
+            input_str = self.keypad.receive_input('#', self.lcd_display)
+            input_str = input_str.replace('#', '')
+            input_str = input_str.replace('*', '')
+            
+            if input_str != '':
+                input = int(input_str)
+            else:
+                input = 0
             input_valid = validate(input)
             if not input_valid:
-                self.lcd_display.display_text('Error with input Try again')
+                self.lcd_display.display_text('Error with input\nTry again')
                 time.sleep(1)
 
         return input
@@ -134,13 +131,13 @@ class Garden:
         # User input questions
 
         # Month must be between 1 and 12
-        self.current_month = self.ask_question('Current month?', lambda x: (1 <= x) and (x <= 12))
+        self.current_month = self.ask_question('Current month?\n', lambda x: (1 <= x) and (x <= 12))
 
         # Day of month must be between 1 and 31. Shorter months will be dealt with later.
-        self.day_of_month = self.ask_question('Day of month?', lambda x: (1 <= x) and (x <= 31))
+        self.day_of_month = self.ask_question('Day of month?\n', lambda x: (1 <= x) and (x <= 31))
 
         # Hour must be between 1 and 12, minutes must be less than or equal to 59
-        self.current_time = self.ask_question('Current time?',
+        self.current_time_int = self.ask_question('Current time?\n',
                                          lambda x: (1 <= x // 100) and (x // 100 <= 12) and \
                                                    (x % 100 <= 59))
 
@@ -148,18 +145,18 @@ class Garden:
         self.startup_pi_time = datetime.now()
 
         # User can choose only 1 or 2
-        self.am_or_pm_current = self.ask_question('AM(1) or PM(2)?', lambda x: (x==1) or (x==2))
+        self.am_or_pm_current = self.ask_question('AM(1) or PM(2)?\n', lambda x: (x==1) or (x==2))
 
         # Hour must be between 1 and 12, minutes must be less than or equal to 59
-        self.light_start_time = self.ask_question('Light starttime?',
+        self.light_start_time = self.ask_question('Light starttime?\n',
                                              lambda x: (1 <= x // 100) and (x // 100 <= 12) and \
                                                        (x % 100 <= 59))
 
         # User can choose only 1 or 2
-        self.am_or_pm_light_start = self.ask_question('AM(1) or PM(2)?', lambda x: (x==1) or (x==2))
+        self.am_or_pm_light_start = self.ask_question('AM(1) or PM(2)?\n', lambda x: (x==1) or (x==2))
 
         # Light must be on for at least one hour, no more than 23
-        self.light_duration = self.ask_question('Light duration?', lambda x: (1 <= x) and (x <= 23))
+        self.light_duration = self.ask_question('Light duration?\n', lambda x: (1 <= x) and (x <= 23))
 
 if __name__ == "__main__":
 
