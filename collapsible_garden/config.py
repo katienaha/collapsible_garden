@@ -30,4 +30,4 @@ config['keypad_cols'] = [digitalio.DigitalInOut(x) for x in (board.D26, board.D2
 config['keypad_rows'] = [digitalio.DigitalInOut(x) for x in (board.D5, board.D6, board.D13, board.D19)]
         
 config['relay_pins'] = [5]
-config['water_sensor_pins'] = [6]
+config['water_sensor_pins'] = [17]

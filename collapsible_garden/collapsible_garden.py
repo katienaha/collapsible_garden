@@ -29,6 +29,8 @@ class Garden:
         
         # Set up GPIO mode and pins to IN or OUT
         self.setup_pins()
+        print('pin {} is {}'.format(17, GPIO.input(17)))
+
         self.grow_light = GrowLight(self.relay_pins[0])
         self.keypad = Keypad(self.keypad_rows, self.keypad_cols)
         self.lcd_display = LcdDisplay(self.lcd_pins, columns=16, rows=2)
@@ -39,22 +41,22 @@ class Garden:
 
         self.current_month = 1
         self.day_of_month = 1
-        self.current_time = 1
+        self.current_time_int = 100
         self.am_or_pm_current = 2
-        self.light_start_time = 700
+        self.light_start_time_int = 700
         self.am_or_pm_light_start = 1
         self.light_duration = 16
         self.feed_duration = timedelta(days=14)
 
         self.startup_pi_time = datetime.now()
         # Ask for user input upon startup
-        self.request_input()
+        #self.request_input()
 
         # Change input times to 24 hour clock using AM and PM responses
         if self.am_or_pm_current == 2:
             self.current_time_int = self.current_time_int + 1200
         if self.am_or_pm_light_start == 2:
-            self.light_start_time_int = self.current_time_int + 1200
+            self.light_start_time_int = self.light_start_time_int + 1200
 
         # Create datetime for when the user says the garden is starting
         self.user_start_datetime = datetime(2021, self.current_month, self.day_of_month,
@@ -67,6 +69,7 @@ class Garden:
         self.set_up_garden_timing()
 
     def set_up_garden_timing(self):
+        
         # Create datetime for when the light should first start
         self.grow_light.next_time_on = datetime(2021, self.current_month, self.day_of_month,
                                                 self.light_start_time_int // 100, self.light_start_time_int % 100)
@@ -85,6 +88,7 @@ class Garden:
     def setup_pins(self):
         # Pin Setup:
         GPIO.setmode(GPIO.BCM)
+        
         for lcd in self.lcd_pins.values():
             GPIO.setup(lcd.id, GPIO.OUT) # LCD pins set as output
         for led in self.led_pins.values():
@@ -92,7 +96,9 @@ class Garden:
         for relay in self.relay_pins:
             GPIO.setup(relay, GPIO.OUT)  # relay pins set as output
         for water_sensor in self.water_sensor_pins:
-            GPIO.setup(water_sensor, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+            print('water sensor pin is {}'.format(water_sensor))
+            GPIO.setup(water_sensor, GPIO.IN)
+            print('pin {} is {}'.format(17, GPIO.input(17)))
         return
 
     def get_current_clock_time(self):
@@ -148,7 +154,7 @@ class Garden:
         self.am_or_pm_current = self.ask_question('AM(1) or PM(2)?\n', lambda x: (x==1) or (x==2))
 
         # Hour must be between 1 and 12, minutes must be less than or equal to 59
-        self.light_start_time = self.ask_question('Light starttime?\n',
+        self.light_start_time_int = self.ask_question('Light starttime?\n',
                                              lambda x: (1 <= x // 100) and (x // 100 <= 12) and \
                                                        (x % 100 <= 59))
 
@@ -163,18 +169,19 @@ if __name__ == "__main__":
     garden = Garden()
 
     try:
+        date_format = '%m/%d, %H:%M:00'
         while True:
 
             # Display current time
             cur_time = self.get_current_clock_time()
-            msg = str(cur_time)
+            msg = 'Current: ' + cur_time.strftime(date_format)
 
             if self.grow_light.is_on == True:
-                msg = msg + 'Next light off: ' + str(self.grow_light.next_time_off)
+                msg = msg + '\nNext light off: ' + self.grow_light.next_time_off.strftime(date_format)
                 if cur_time > self.grow_light.next_time_off:
                     self.grow_light.turn_off()
             else:
-                msg = msg + 'Next light on: ' + str(self.grow_light.next_time_on)
+                msg = msg + '\nNext light on: ' + self.grow_light.next_time_on.strftime(date_format)
                 if cur_time > self.grow_light.next_time_on:
                     self.grow_light.turn_on()
 

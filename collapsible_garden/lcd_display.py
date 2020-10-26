@@ -28,7 +28,7 @@ class LcdDisplay:
 #        lcd.message = "Hello Kelsey!"
         last_message = ''
         self.lcd = lcd
-        time.sleep(5)
+        #time.sleep(5)
 
     def display_text(self, message):
         print('Displaying message: {}'.format(message))
