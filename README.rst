@@ -16,7 +16,7 @@ collapsible_garden
 
 
 
-A Raspberry Pi-automated garden for terrible plant owners
+A Raspberry Pi-automated garden for terrible plant owners, like me
 
 
 * Free software: MIT license
