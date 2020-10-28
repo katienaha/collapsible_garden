@@ -12,7 +12,7 @@ class WaterLevelSensor:
 
     # Check to see if the water level is too low
     def check_water_level(self):
-
+        print('pin {} is {}'.format(self.pin, GPIO.input(self.pin)))
         if GPIO.input(self.pin) == GPIO.HIGH:
             self.is_too_low = True
         else:
