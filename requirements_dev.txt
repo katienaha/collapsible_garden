@@ -10,3 +10,6 @@ twine==1.14.0
 
 pytest==4.6.5
 pytest-runner==5.1
+adafruit-circuitpython-charlcd==3.3.3
+adafruit-circuitpython-matrixkeypad=1.2.2
+
